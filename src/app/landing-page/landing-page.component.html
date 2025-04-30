@@ -1,0 +1,36 @@
+<div class="landing-container">
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1>{{ title }}</h1>
+            <p class="subtitle">{{ subtitle }}</p>
+            <div class="cta-buttons">
+                <a routerLink="/login" class="btn btn-primary">Iniciar Sesión</a>
+                <a routerLink="/register" class="btn btn-secondary">Registrarse</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="features-section">
+        <h2>Características Principales</h2>
+        <div class="features-grid">
+            <div class="feature-card" *ngFor="let feature of features">
+                <div class="feature-icon">{{ feature.icon }}</div>
+                <h3>{{ feature.title }}</h3>
+                <p>{{ feature.description }}</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="about-content">
+            <h2>¿Por qué elegir ANDINA TRADING?</h2>
+            <p>Somos la plataforma líder en trading en Latinoamérica, ofreciendo herramientas profesionales y acceso a mercados globales con la más alta seguridad y soporte técnico.</p>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2024 ANDINA TRADING. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+</div>
