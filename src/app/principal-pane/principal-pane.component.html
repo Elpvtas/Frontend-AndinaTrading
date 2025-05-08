@@ -1,0 +1,72 @@
+<div class="parent">
+  <div class="div1">
+    <!-- trading-view.component.html -->
+    <div id="tradingview_12345">
+      <div id="chart" style="width: 100%; height: 400px;"></div>
+    </div>
+  </div>
+
+  <div class="div2">
+    <!-- Campo de búsqueda -->
+    <div class="stock-table-container">
+
+    <div class="search-container">
+      <input
+        type="text"
+        class="search-input"
+        [(ngModel)]="searchQuery"
+        (input)="filterSymbols()"
+        placeholder="Buscar símbolos..."
+      />
+      <i class="search-icon fa fa-search"></i>
+    </div>
+    <table  class="stock-table">
+      <thead>
+      <tr>
+        <th>Symbol</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr  *ngFor="let symbol of filteredSymbols; let i = index" (click)="showSymbol(symbol)">
+        <td>{{ symbol }}</td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="div3">
+
+
+
+  </div>
+  <div class="div4">
+    <div class="stock-card">
+      <div class="stock-header">
+        <h2>{{ symbol }}</h2>
+        <span class="price">${{ stockPrice.toFixed(2) }}</span>
+      </div>
+
+      <div class="stock-body">
+        <p>Acciones en cartera: <strong>{{ sharesOwned }}</strong></p>
+
+        <div class="quantity-selector">
+          <label for="quantity">Cantidad a comprar:</label>
+          <button (click)="decreaseQuantity()" [disabled]="buyQuantity <= 1">-</button>
+          <span>{{ buyQuantity }}</span>
+          <button (click)="increaseQuantity()">+</button>
+        </div>
+
+        <p>Total a pagar: <strong>${{ (buyQuantity * stockPrice).toFixed(2) }}</strong></p>
+      </div>
+
+      <div class="stock-actions">
+        <button class="buy-btn" (click)="buyStock()">Comprar</button>
+        <button class="sell-btn" (click)="sellStock()" [disabled]="sharesOwned === 0">Vender</button>
+      </div>
+    </div>
+
+
+
+  </div>
+</div>

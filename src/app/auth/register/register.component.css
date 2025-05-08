@@ -76,21 +76,43 @@
     margin-top: 1rem;
 }
 
+.terms-group {
+  margin-top: 1rem;
+}
+
 .terms-checkbox {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: #f9f9f9;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
 }
 
 .terms-checkbox input[type="checkbox"] {
-    width: 1rem;
-    height: 1rem;
-    margin-top: 0.25rem;
+  width: 18px;
+  height: 18px;
+  accent-color: #1a237e;
+  cursor: pointer;
 }
 
 .terms-checkbox label {
-    font-size: 0.9rem;
-    line-height: 1.4;
+  font-size: 0.9rem;
+  color: #333;
+  line-height: 1.4;
+  cursor: pointer;
+  user-select: none;
+}
+
+.terms-checkbox a {
+  color: #1a237e;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.terms-checkbox a:hover {
+  text-decoration: underline;
 }
 
 .terms-link {

@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
+import {LoginService} from "../../services/login.service";
 
 @Component({
   selector: 'app-login',
@@ -10,23 +11,48 @@ import { RouterModule } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements  OnInit {
   loginForm: FormGroup;
   isLoading = false;
+  userList : any [] = []
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder ,
+    private loginService : LoginService,
+    private router : Router) {
+
+
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      username: ['', Validators.required],
+      password: ['', [Validators.required,]]
     });
+
   }
+
+  ngOnInit(): void {
+
+    this.loginService.getUsers().subscribe({
+      next: (users) => {
+        this.userList = users;
+        console.log('Usuarios cargados:', this.userList);
+        this.router.navigate(['andina']);
+      },
+      error: (err) => {
+        console.error('Error al cargar usuarios:', err);
+      }
+    });
+    console.log(this.userList);
+
+
+    }
 
   onSubmit() {
     if (this.loginForm.valid) {
       this.isLoading = true;
-      // TODO: Implement login logic here
+      // TODO: Implement login logic
+      this.loginService.login(this.loginForm.value.username , this.loginForm.value.password)
       console.log(this.loginForm.value);
       this.isLoading = false;
     }
   }
-} 
+}
