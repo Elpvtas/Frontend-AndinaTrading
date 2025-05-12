@@ -15,6 +15,8 @@ export class LoginComponent implements  OnInit {
   loginForm: FormGroup;
   isLoading = false;
   userList : any [] = []
+  username : string = "";
+
 
   constructor(
     private fb: FormBuilder ,
@@ -34,8 +36,8 @@ export class LoginComponent implements  OnInit {
     this.loginService.getUsers().subscribe({
       next: (users) => {
         this.userList = users;
-        console.log('Usuarios cargados:', this.userList);
-        this.router.navigate(['andina']);
+
+        this.router.navigate(['andina'])
       },
       error: (err) => {
         console.error('Error al cargar usuarios:', err);
@@ -50,6 +52,8 @@ export class LoginComponent implements  OnInit {
     if (this.loginForm.valid) {
       this.isLoading = true;
       // TODO: Implement login logic
+      this.username = this.loginForm.value.username;
+      localStorage.setItem('username', this.username);
       this.loginService.login(this.loginForm.value.username , this.loginForm.value.password)
       console.log(this.loginForm.value);
       this.isLoading = false;

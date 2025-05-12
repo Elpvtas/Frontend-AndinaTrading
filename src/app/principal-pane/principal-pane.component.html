@@ -1,3 +1,4 @@
+<app-header></app-header>
 <div class="parent">
   <div class="div1">
     <!-- trading-view.component.html -->
@@ -36,20 +37,86 @@
   </div>
 
   <div class="div3">
+    <div class="stock-table-container">
+    <table class="orders-table">
+      <thead>
+      <tr>
+        <th style="background: linear-gradient(135deg, #1a237e, #0d47a1);  color:white">ORDERS</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let action of actions" (click)="toggleDetails(action)">
+        <td>{{ action.tipo_orden }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 
+  <!-- Modal -->
+    <div class="modal-backdrop" *ngIf="selectedAction" (click)="selectedAction = null">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <button class="close-button" (click)="selectedAction = null">&times;</button>
+        <h2>Detalles de la Orden</h2>
+
+        <div class="order-detail">
+          <span>ID:</span> <strong>{{ selectedAction.id }}</strong>
+        </div>
+
+        <div class="order-detail">
+          <span>Tipo de Orden:</span>
+          <strong [ngClass]="{
+        'buy-order': selectedAction.tipo_orden.toLowerCase().includes('buy'),
+        'sell-order': selectedAction.tipo_orden.toLowerCase().includes('sell')
+      }">
+            {{ selectedAction.tipo_orden }}
+          </strong>
+        </div>
+
+        <div class="order-detail">
+          <span>Precio:</span>
+          <strong [ngClass]="{
+        'buy-order': selectedAction.tipo_orden.toLowerCase().includes('buy'),
+        'sell-order': selectedAction.tipo_orden.toLowerCase().includes('sell')
+      }">
+            ${{ selectedAction.precio  }}
+          </strong>
+
+          @if(rol === 3){
+            <span>ID user:</span> <strong>{{ selectedAction.usuario_id}}</strong>
+          }
+
+        </div>
+
+        <div class="order-detail">
+          <span>Fecha y Hora:</span>
+          <strong>{{ selectedAction.fecha_hora  }}</strong>
+        </div>
+        @if(rol == 3){
+          <button class="buy-btn" (click)="makeContract(selectedAction.usuario_id, selectedAction.comision)">Hacer contrato</button>
+
+        }
+      </div>
+
+
+    </div>
 
 
   </div>
+
+
   <div class="div4">
+
     <div class="stock-card">
+
+      @if(rol != 3)  {
+
+
       <div class="stock-header">
         <h2>{{ symbol }}</h2>
         <span class="price">${{ stockPrice.toFixed(2) }}</span>
       </div>
 
       <div class="stock-body">
-        <p>Acciones en cartera: <strong>{{ sharesOwned }}</strong></p>
-
         <div class="quantity-selector">
           <label for="quantity">Cantidad a comprar:</label>
           <button (click)="decreaseQuantity()" [disabled]="buyQuantity <= 1">-</button>
@@ -61,9 +128,36 @@
       </div>
 
       <div class="stock-actions">
-        <button class="buy-btn" (click)="buyStock()">Comprar</button>
-        <button class="sell-btn" (click)="sellStock()" [disabled]="sharesOwned === 0">Vender</button>
+        <button class="buy-btn" (click)="buyStock()">BUY</button>
+        <button class="sell-btn" (click)="sellStock()">SELL</button>
       </div>
+      } @else {
+        <h2>Contratos</h2>
+        <div class="stock-header">
+
+          <table>
+            <thead>
+            <tr>
+              <th># Contrato</th>
+              <th>Fecha de creacion</th>
+              <th>Comisión ($)</th>
+              <th>ID Inversionista</th>
+              <th>ID Comisionista</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let contrato of contratos">
+              <td>{{ contrato.numero_contrato }}</td>
+              <td>{{ contrato.fecha_hora_inicio  }}</td>
+              <td>{{ contrato.comision }}</td>
+              <td>{{ contrato.inversionista_id }}</td>
+              <td>{{ contrato.comisionista_id }}</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+      }
     </div>
 
 

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import {Router, RouterModule} from '@angular/router';
 import { LoginService } from "../../services/login.service";
 
 @Component({
@@ -15,7 +15,7 @@ export class RegisterComponent {
   registerForm: FormGroup;
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private loginService: LoginService) {
+  constructor(private fb: FormBuilder, private loginService: LoginService , private router: Router) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -60,7 +60,13 @@ export class RegisterComponent {
         console.log('Usuario creado con éxito');
         localStorage.removeItem('access_token');
 
-        this.loginService.login(usuarioJson.username,usuarioJson.hashed_password);
+
+        const numero = 25000;
+        localStorage.setItem(usuarioJson.username, numero.toString());
+
+        this.router.navigate(['login']);
+
+
 
       }, error => {
         this.isLoading = false;

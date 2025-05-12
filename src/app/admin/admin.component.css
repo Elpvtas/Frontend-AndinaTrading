@@ -1,0 +1,98 @@
+.admin-container {
+  background-color: #ffffff;
+  color: #0d47a1;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h1, h2, h3 {
+  color: #0d47a1;
+  margin-bottom: 1rem;
+}
+
+.card {
+  background: linear-gradient(135deg, #1a237e, #0d47a1);
+  color: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 12px rgba(13, 71, 161, 0.3);
+}
+
+input, button {
+  padding: 0.6rem;
+  margin: 0.5rem 0.4rem 0.5rem 0;
+  border: none;
+  border-radius: 5px;
+  outline: none;
+  font-size: 0.95rem;
+}
+
+input {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  border: 1px solid #90caf9;
+}
+
+button {
+  background-color: #1565c0;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0d47a1;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: white;
+  color: #0d47a1;
+}
+
+th {
+  background-color: #e3f2fd;
+  padding: 0.7rem;
+  text-align: left;
+}
+
+td {
+  border-bottom: 1px solid #bbdefb;
+  padding: 0.6rem;
+}
+
+.edit-user {
+  background-color: #e3f2fd;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  color: #0d47a1;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.tables-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.table-card {
+  flex: 1 1 48%;
+  min-width: 300px;
+}
+.table-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 8px;
+  padding-right: 0.5rem;
+}
+

@@ -1,15 +1,21 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import {isPlatformBrowser, NgFor, NgIf} from '@angular/common';
+import {Component, Inject, numberAttribute, OnInit, PLATFORM_ID} from '@angular/core';
+import {isPlatformBrowser, NgClass, NgFor, NgIf} from '@angular/common';
 import {FormsModule} from "@angular/forms";
+import {CompaniesService} from "../services/companies.service";
+import {ActionsService} from "../services/actions.service";
+import {Router} from "@angular/router";
+import {HeaderComponent} from "../header/header.component";
+import {OrdenService} from "../services/orden.service";
+import {ContractService} from "../services/contract.service";
 
 @Component({
   selector: 'app-principal-pane',
   standalone: true,
-  imports: [NgFor, FormsModule ,NgIf],
+  imports: [NgFor, FormsModule, NgIf, HeaderComponent, NgClass],
   templateUrl: './principal-pane.component.html',
   styleUrl: './principal-pane.component.css',
 })
-export class PrincipalPaneComponent {
+export class PrincipalPaneComponent  implements OnInit  {
 
   symbolPrices: { [symbol: string]: number } = {
     ECO: 108.33,
@@ -243,47 +249,48 @@ export class PrincipalPaneComponent {
     FLIR: 429.56
   };
 
-
-  sp500Symbols: string[] = [
-    'ECO', 'MSFT', 'GOOGL', 'AMZN', 'META', 'TSLA', 'NVDA', 'BRK.B', 'JPM', 'JNJ', 'V', 'UNH', 'HD', 'PG', 'XOM',
-    'MA', 'PFE', 'KO', 'DIS', 'NFLX', 'INTC', 'BA', 'WMT', 'CSCO', 'NVDA', 'PYPL', 'T', 'VZ', 'UNP', 'MMM', 'CAT',
-    'RTX', 'GS', 'BABA', 'MRK', 'IBM', 'ACN', 'MS', 'LMT', 'CVX', 'AMGN', 'AMT', 'CL', 'BIIB', 'SPG', 'COF', 'MCD',
-    'COP', 'RTX', 'WBA', 'CB', 'NSC', 'SLB', 'SYK', 'GS', 'TMO', 'DHR', 'LHX', 'ZTS', 'ISRG', 'SYY', 'ADBE', 'MDT',
-    'COST', 'MSCI', 'SBUX', 'GM', 'F', 'KO', 'ADP', 'AXP', 'FIS', 'FISV', 'AIG', 'TDG', 'PXD', 'EOG', 'PLD', 'CME',
-    'VRTX', 'DE', 'BMY', 'ZBH', 'BA', 'KMB', 'NTAP', 'APD', 'STZ', 'WM', 'PSA', 'EQIX', 'CCI', 'PGR', 'AFL', 'OXY',
-    'DD', 'LRCX', 'EFX', 'MU', 'CSX', 'BAX', 'INTU', 'HUM', 'HLT', 'TGT', 'GIS', 'CHTR', 'GILD', 'MRNA', 'KLAC', 'PEP',
-    'MELI', 'XEL', 'RSG', 'CNC', 'CBOE', 'EXC', 'LUV', 'REGN', 'AMAT', 'DXC', 'NOC', 'C', 'STZ', 'WDC', 'TMO', 'TSLA',
-    'UBER', 'COO', 'CTSH', 'SBAC', 'AON', 'SRE', 'HCA', 'STT', 'VLO', 'CARR', 'VFC', 'LULU', 'TROW', 'CTAS', 'MSCI',
-    'UNH', 'BAX', 'RTN', 'FISV', 'SYY', 'KLAC', 'ABBV', 'BDX', 'EMR', 'TSN', 'DD', 'PGR', 'SWKS', 'AMAT', 'WELL', 'TFX',
-    'CHD', 'SYK', 'EFX', 'WMB', 'GE', 'AVGO', 'WEC', 'DOV', 'FTV', 'MCHP', 'REGN', 'USB', 'CPB', 'NUE', 'LUV', 'OKE',
-    'AVY', 'SO', 'MRO', 'SJM', 'TAP', 'XRX', 'NEM', 'RCL', 'ZBRA', 'RHI', 'PNC', 'ABT', 'APTV', 'LHX', 'EQR', 'JCI',
-    'SNA', 'IDXX', 'ETN', 'ORLY', 'TRV', 'GPC', 'HUM', 'VTRS', 'V', 'FTNT', 'MCHP', 'DE', 'REGN', 'MRNA', 'IQV', 'SYY',
-    'HAS', 'ORCL', 'TYL', 'HCA', 'VRTX', 'PKG', 'IDXX', 'SHW', 'NVR', 'FFIV', 'AON', 'JPM', 'MCO', 'PEP', 'T', 'VZ', 'HRL',
-    'CBRE', 'EXR', 'CHTR', 'LMT', 'LYB', 'MSCI', 'PGR', 'RHT', 'AEE', 'FIS', 'CBOE', 'OXY', 'TPR', 'APD', 'ZBH', 'CLX',
-    'WM', 'VLO', 'AVGO', 'VFC', 'DHR', 'AIG', 'MKTX', 'SPLK', 'NKE', 'AFL', 'NSC', 'RMD', 'LHX', 'HES', 'TDG', 'HII',
-    'PNC', 'HOLX', 'VRSN', 'VLO', 'VRTS', 'TRIP', 'FMC', 'NTAP', 'AAPL', 'LULU', 'BXP', 'SNPS', 'KMX', 'CPRT', 'ANET',
-    'MKC', 'IFF', 'NWL', 'GRMN', 'HRS', 'RCL', 'TPX', 'ALB', 'IQV', 'NEM', 'SWKS', 'ESS', 'BAX', 'MMM', 'HAS', 'AEP',
-    'GOOG', 'UNP', 'AMAT', 'TROW', 'MRO', 'HPE', 'CNC', 'ZTS', 'KMB', 'PEP', 'NKE', 'CSX', 'MS', 'EXC', 'PRU', 'STZ',
-    'ETN', 'SBAC', 'BAX', 'MDT', 'TMO', 'PXD', 'CE', 'HCA', 'SBUX', 'JCI', 'SYY', 'DHR', 'ACN', 'STT', 'V', 'HUM', 'XOM',
-    'CVS', 'JCI', 'LUV', 'SNAP', 'SPG', 'WBA', 'BMY', 'AMGN', 'ANSS', 'CSX', 'PEP', 'DIS', 'FISV', 'IBM', 'PEP', 'SBUX',
-    'CSX', 'BRK.B', 'FB', 'LMT', 'CVX', 'GE', 'WMT', 'GM', 'MCO', 'SPGI', 'NEE', 'MSCI', 'TMO', 'T', 'NSC', 'ADBE', 'MCK',
-    'UNH', 'DHR', 'AON', 'AVY', 'AEP', 'RSG', 'FIS', 'CHTR', 'GPC', 'WEC', 'XEL', 'LOW', 'OMC', 'DHR', 'FISV', 'ACN', 'FLIR'
-  ];
-
-
-
-
-  filteredSymbols: string[] = [...this.sp500Symbols]; // Para almacenar los símbolos filtrados
-
+  contratos: any[] = [];
+  selectedAction: any = null;
   searchQuery: string = ''; // Para almacenar el texto de búsqueda
-
+  private sp500symbols: any[] = []
   private widget: any; // Referencia al widget de TradingView
   private isBrowser = false;
+  filteredSymbols: string[] = [];
   public symbol: string = 'AAPL'; // Variable que almacena el símbolo seleccionado
   public  stockPrice : number =125.5;
+  actions :any = []
+  money = 0
+  rol = 0
+  error: string | null = null;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object ,
+              private companyService:CompaniesService ,
+              private actionService:ActionsService,
+              private orderService:OrdenService,
+              private contractService:ContractService,
+              private route :Router) {
     this.isBrowser = isPlatformBrowser(this.platformId);
+
+
+  }
+
+  ngOnInit(): void {
+    this.getAllActions();
+    setInterval(() => {
+      this.getAllActions();
+      this.getAllContracts();
+    }, 500);
+    this.getAllCompanies();
+
+
+    const user = localStorage.getItem('user');
+
+    if(user != null) {
+
+      this.rol = JSON.parse(user).rol;
+    }
+
   }
 
   ngAfterViewInit() {
@@ -328,7 +335,7 @@ export class PrincipalPaneComponent {
 
   // Método para filtrar los símbolos basado en el término de búsqueda
   filterSymbols(): void {
-    this.filteredSymbols = this.sp500Symbols.filter(symbol =>
+    this.filteredSymbols = this.sp500symbols.filter(symbol =>
       symbol.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
@@ -350,12 +357,231 @@ export class PrincipalPaneComponent {
 
   buyStock() {
     this.sharesOwned += this.buyQuantity;
+
+    const empresaId$ = this.companyService.getCompanyIdByName(this.symbol);
+
+    const user = localStorage.getItem('user');
+
+
+
+    if(user != null) {
+
+      const id = JSON.parse(user).id;
+      const username = JSON.parse(user).username;
+      const money = localStorage.getItem(username);
+
+      if (money !== null) {
+        this.money = parseFloat(money); // o Number(valor)
+        if( this.money == 0){
+          alert('Debe de cargar dinero mediante administracion')
+          return;
+        }
+
+      empresaId$.subscribe((empresaId) => {
+        const order = {
+          id: 0,
+          tipo_orden: "BUY-" + this.symbol,
+          precio: this.stockPrice * this.buyQuantity,
+          fecha_hora: this.getFechaHoraActual(),
+          comision: 0.15 * (this.stockPrice * this.buyQuantity),
+          usuario_id:id ,
+          created_at: this.getFechaHoraActual(),
+          update_at:null,
+          deleted_at:null
+
+        };
+
+        this.money = this.money - order.precio;
+        localStorage.removeItem(username);
+        localStorage.setItem(username, this.money.toString());
+        this.orderService.createOrder(order).subscribe(() => {
+          console.log(order);
+        });
+      });
+
+    }
+      }
+
   }
 
   sellStock() {
-    if (this.sharesOwned > 0) {
-      this.sharesOwned--;
+    this.sharesOwned += this.buyQuantity;
+
+    const empresaId$ = this.companyService.getCompanyIdByName(this.symbol);
+
+    const user = localStorage.getItem('user');
+
+    if(user != null) {
+
+
+      const id = JSON.parse(user).id;
+      const username = JSON.parse(user).username;
+      const money = localStorage.getItem(username);
+
+      if (money !== null) {
+        this.money = parseFloat(money); // o Number(valor)
+        if(this.money == 0){
+          alert('Debe de cargar dinero mediante administracion')
+          return;
+        }
+
+        empresaId$.subscribe((empresaId) => {
+          const order = {
+            id: 0,
+            tipo_orden: "SELL-" + this.symbol,
+            precio: this.stockPrice * this.buyQuantity,
+            fecha_hora: this.getFechaHoraActual(),
+            comision: 0.15 * (this.stockPrice * this.buyQuantity),
+            usuario_id: id,
+            created_at: this.getFechaHoraActual(),
+            update_at: null,
+            deleted_at: null
+
+          };
+
+          this.money = this.money - order.precio;
+          localStorage.removeItem(username);
+          localStorage.setItem(username, this.money.toString());
+
+          this.orderService.createOrder(order).subscribe(() => {
+            console.log(order);
+
+
+          });
+        });
+      }
+    }
+
+  }
+
+
+  getFechaHoraActual(): string {
+    const ahora = new Date();
+
+    const year = ahora.getFullYear();
+    const month = String(ahora.getMonth() + 1).padStart(2, '0'); // Meses van de 0 a 11
+    const day = String(ahora.getDate()).padStart(2, '0');
+    const hours = String(ahora.getHours()).padStart(2, '0');
+    const minutes = String(ahora.getMinutes()).padStart(2, '0');
+    const seconds = String(ahora.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
+  private getAllActions() {
+
+
+
+    const user = localStorage.getItem('user');
+
+    if(user != null) {
+
+      const id = JSON.parse(user).id;
+
+      if(this.rol != 3) {
+        this.orderService.getOrder(id).subscribe({
+          next: (data) => {
+            this.actions = data;
+          },
+          error: (err) => {
+            if (err.status === 401) {
+              console.warn('No autorizado. Redirigiendo al home...');
+              this.route.navigate(['/login']); // ajusta la ruta según tu app
+            } else {
+              console.error('Error al obtener acciones:', err.message);
+            }
+          }
+        });
+      }else{
+        this.orderService.getOrders().subscribe({
+          next: (data) => {
+            this.actions = data;
+          },
+          error: (err) => {
+            if (err.status === 401) {
+              console.warn('No autorizado. Redirigiendo al home...');
+              this.route.navigate(['/login']); // ajusta la ruta según tu app
+            } else {
+              console.error('Error al obtener acciones:', err.message);
+            }
+          }
+        });
+      }
+    }
+
+  }
+
+  private getAllCompanies() {
+    this.companyService.getCompanyNames().subscribe({
+      next: (names) => {
+        this.sp500symbols = names;
+        this.filteredSymbols = [...names];  // Copiar los datos a filteredSymbols
+      },
+      error: (err) => {
+        console.error('Error al obtener empresas:', err.message);
+      }
+    });
+  }
+
+
+
+  toggleDetails(action: any): void {
+    if (this.selectedAction && this.selectedAction.id === action.id) {
+      this.selectedAction = null; // Cierra si se vuelve a hacer clic en la misma
+    } else {
+      this.selectedAction = action;
     }
   }
 
+  makeContract(usuario_id: any, comision: any){
+
+    const user = localStorage.getItem('user');
+
+    if(user != null) {
+
+
+      const id = JSON.parse(user).id;
+
+
+      const contract = {
+        numero_contrato: 0,
+        fecha_hora_inicio: this.getFechaHoraActual(),
+        fecha_hora_fin: this.getFechaHoraActual(),
+        comision: comision,
+        inversionista_id:id,
+        comisionista_id: usuario_id,
+        created_at: this.getFechaHoraActual(),
+        update_at: null,
+        deleted_at: null
+      }
+
+      this.contractService.createContract(contract).subscribe(() => {
+        console.log(contract);
+      })
+
+
+    }
+
+    this.selectedAction = ''
+
+  }
+
+  private getAllContracts() {
+    const user = localStorage.getItem('user');
+    if (user != null) {
+
+
+      const id = JSON.parse(user).id;
+
+
+      this.contractService.getContracts(id).subscribe({
+        next: (names) => {
+          this.contratos = names;
+        },
+        error: (err) => {
+          console.error('Error al obtener empresas:', err.message);
+        }
+      });
+    }
+  }
 }
